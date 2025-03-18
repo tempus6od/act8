@@ -14,7 +14,8 @@ class SuperheroeController extends Controller
      */
     public function index()
     {
-        //
+        $superheroes = Superheroe::all();
+        return view ('superheroes.index', compact('superheroes'));
     }
 
     /**
@@ -24,7 +25,7 @@ class SuperheroeController extends Controller
      */
     public function create()
     {
-        //
+        return view('superheroes.create');
     }
 
     /**
@@ -35,7 +36,15 @@ class SuperheroeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nombre_real' => 'required',
+            'nombre_heroe' => 'required',
+            'foto_url' => 'required|url',
+            'informacion_adicional' => 'nullable'
+        ]);
+
+        Superheroe::create($request->all());
+        return redirect()->route('superheroe.index')->with('success', 'Superheroe creado correctamente');
     }
 
     /**
@@ -46,7 +55,7 @@ class SuperheroeController extends Controller
      */
     public function show(Superheroe $superheroe)
     {
-        //
+        return view ('superheroes.show', compact('superheroe'));
     }
 
     /**
@@ -57,7 +66,7 @@ class SuperheroeController extends Controller
      */
     public function edit(Superheroe $superheroe)
     {
-        //
+        return view('superheroes.edit', compact('superheroe'));
     }
 
     /**
@@ -69,7 +78,15 @@ class SuperheroeController extends Controller
      */
     public function update(Request $request, Superheroe $superheroe)
     {
-        //
+        $request->validate([
+            'nombre_real' => 'required',
+            'nombre_heroe' => 'required',
+            'foto_url' => 'required|url',
+            'informacion_adicional' => 'nullable'
+        ]);
+
+        $superheroe->update($request->all());
+        return redirect()->route('superheroes.index')->with('success', 'Superhéroe actualizado correctamente.');
     }
 
     /**
@@ -80,6 +97,7 @@ class SuperheroeController extends Controller
      */
     public function destroy(Superheroe $superheroe)
     {
-        //
+        $superheroe->delete();
+        return redirect()->route('superheroes.index')->with('success', 'Superhéroe eliminado correctamente.');
     }
 }
