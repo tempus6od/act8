@@ -37,13 +37,17 @@ class SuperheroeController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nombre_real' => 'required',
-            'nombre_heroe' => 'required',
-            'foto_url' => 'required|url',
-            'informacion_adicional' => 'nullable'
+            'nombre_real' => 'required|string|max:255',
+            'nombre_heroe' => 'required|string|max:255',
+            'foto_url' => 'nullable|image|mines:jpeg,png,jpg,gif|max:2048',
+            'informacion_adicional' => 'nullable|string',
         ]);
+        if($request->hasFile('foto_url'))
+        {
+            $data['foto_url'] = $request->file('foto_url')->store('superheroes', 'public');
+        }
 
-        Superheroe::create($request->all());
+        Superheroe::create($data);
         return redirect()->route('superheroe.index')->with('success', 'Superheroe creado correctamente');
     }
 
